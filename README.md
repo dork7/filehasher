@@ -1,6 +1,6 @@
 # filehasher
 
-Monorepo with a small **`filehasher` npm package** (CLI + library) and a **Next.js** web UI. Data is protected with a **password using AES-256-GCM** (encryption you can reverse with the password). That is **not** one-way cryptographic hashing; if you need irreversible fingerprints, use a real hash (e.g. SHA-256) instead.
+Monorepo with a small **`@dork7/filehasher`** npm package (CLI + library) and a **Next.js** web UI. Data is protected with a **password using AES-256-GCM** (encryption you can reverse with the password). That is **not** one-way cryptographic hashing; if you need irreversible fingerprints, use a real hash (e.g. SHA-256) instead.
 
 ## Packages
 
@@ -13,7 +13,7 @@ Monorepo with a small **`filehasher` npm package** (CLI + library) and a **Next.
 
 ```bash
 npm install
-npm run build -w filehasher
+npm run build -w @dork7/filehasher
 npm run build -w web   # optional, for production web build
 ```
 
@@ -28,6 +28,15 @@ npx filehasher decrypt -i secret.fhc -o plain.txt -p "your password"
 
 Omit `-p` to be prompted (encrypt prompts for confirmation).
 
+**One-way file hash** (SHA-256 by default; any name accepted by Node’s `crypto.createHash`):
+
+```bash
+npx filehasher hash README.md
+npx filehasher hash -i README.md -a sha512
+echo -n "hello" | npx filehasher hash
+npm run hash -- ./path/to/file   # from repo root (forwards args after --)
+```
+
 ## Web app
 
 ```bash
@@ -38,9 +47,9 @@ Open the printed local URL. Encrypt tab downloads `encrypted.fhc`; Decrypt tab a
 
 ## Publishing the npm package
 
+The published name is **`@dork7/filehasher`** (scoped; unscoped `filehasher` is blocked by npm as too similar to `file-hasher`).
+
 ```bash
-cd packages/filehasher
-npm publish --access public
+npm run publish:filehasher
 ```
 
-Consumers install `filehasher` and use `import { encrypt, decrypt } from "filehasher"` or the `filehasher` CLI from `node_modules/.bin`.

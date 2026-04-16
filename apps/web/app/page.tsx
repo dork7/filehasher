@@ -187,7 +187,8 @@ export default function Home() {
       <p className="note">
         CLI (same format): <code>filehasher encrypt -i plain.txt -o out.fhc</code> and{" "}
         <code>filehasher decrypt -i out.fhc -o plain.txt</code>. Use{" "}
-        <code>-p &quot;your password&quot;</code> or omit <code>-p</code> to be prompted.
+        <code>-p &quot;your password&quot;</code> or omit <code>-p</code> to be prompted. One-way
+        digest: <code>filehasher hash path/to/file</code>.
       </p>
     </main>
   );

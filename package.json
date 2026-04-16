@@ -1,13 +1,18 @@
 {
   "name": "filehasher-monorepo",
-  "private": true,
+  "version": "0.0.0",
+  "private": false,
   "workspaces": [
     "packages/*",
     "apps/*"
   ],
   "scripts": {
-    "build": "npm run build -w filehasher && npm run build -w web",
+    "build": "npm run build -w @dork7/filehasher && npm run build -w web",
     "dev": "npm run dev -w web",
-    "filehasher": "npm run start -w filehasher"
+    "filehasher": "npm run start -w @dork7/filehasher",
+    "hash": "npm run hash -w @dork7/filehasher",
+    "env:hash": "npm run env:hash -w @dork7/filehasher",
+    "env:dehash": "npm run env:dehash -w @dork7/filehasher",
+    "publish:filehasher": "npm publish -w @dork7/filehasher --access public"
   }
 }

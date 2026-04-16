@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { decrypt } from "filehasher";
+import { decrypt } from "@dork7/filehasher";
 
 export async function POST(req: Request) {
   const form = await req.formData();

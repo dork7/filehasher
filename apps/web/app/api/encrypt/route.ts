@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { encrypt } from "filehasher";
+import { encrypt } from "@dork7/filehasher";
 
 export async function POST(req: Request) {
   let body: { text?: string; password?: string };

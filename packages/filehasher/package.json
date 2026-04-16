@@ -1,12 +1,12 @@
 {
-  "name": "filehasher",
+  "name": "@dork7/filehasher",
   "version": "1.0.0",
   "description": "Password-protected file encryption (AES-256-GCM) with CLI",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "bin": {
-    "filehasher": "./dist/cli.js"
+    "filehasher": "dist/cli.js"
   },
   "exports": {
     ".": {
@@ -15,11 +15,26 @@
     }
   },
   "files": [
-    "dist"
+    "dist",
+    "README.md",
+    "LICENSE"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dork7/filehasher.git",
+    "directory": "packages/filehasher"
+  },
+  "bugs": {
+    "url": "https://github.com/dork7/filehasher/issues"
+  },
+  "homepage": "https://github.com/dork7/filehasher/tree/main/packages/filehasher",
   "scripts": {
+    "prepublishOnly": "npm run build",
     "build": "tsc",
-    "start": "node dist/cli.js"
+    "start": "node dist/cli.js",
+    "hash": "node dist/cli.js hash",
+    "env:hash": "node dist/cli.js env lock",
+    "env:dehash": "node dist/cli.js env unlock"
   },
   "engines": {
     "node": ">=18"
@@ -37,5 +52,8 @@
   },
   "dependencies": {
     "commander": "^13.1.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
