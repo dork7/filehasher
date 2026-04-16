@@ -1,0 +1,13 @@
+{
+  "name": "filehasher-monorepo",
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "build": "npm run build -w filehasher && npm run build -w web",
+    "dev": "npm run dev -w web",
+    "filehasher": "npm run start -w filehasher"
+  }
+}
