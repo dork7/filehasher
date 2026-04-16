@@ -13,6 +13,10 @@
     "hash": "npm run hash -w @dork7/filehasher",
     "env:hash": "npm run env:hash -w @dork7/filehasher",
     "env:dehash": "npm run env:dehash -w @dork7/filehasher",
-    "publish:filehasher": "npm publish -w @dork7/filehasher --access public"
+    "publish:filehasher": "npm publish -w @dork7/filehasher --access public",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "husky": "^9.1.7"
   }
 }

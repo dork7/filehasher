@@ -1,0 +1,9 @@
+# Seal .env → .env.fhc and include .env.fhc in this commit. Skip: HUSKY=0 git commit or --no-verify
+ROOT="$(git rev-parse --show-toplevel 2>/dev/null)" || exit 0
+cd "$ROOT" || exit 0
+if [ -f .env ]; then
+  npm run env:hash
+  if [ -f .env.fhc ]; then
+    git add -- .env.fhc
+  fi
+fi
