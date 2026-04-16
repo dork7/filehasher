@@ -16,6 +16,22 @@ program
   )
   .version("1.0.0");
 
+program.addHelpText(
+  "after",
+  `
+Use in your project (after npm install @dork7/filehasher), add scripts to package.json:
+
+  "scripts": {
+    "encrypt": "filehasher encrypt -i path/to/plain.txt -o path/to/out.fhc",
+    "decrypt": "filehasher decrypt -i path/to/out.fhc -o path/to/plain.txt",
+    "env:hash": "filehasher env lock",
+    "env:dehash": "filehasher env unlock"
+  }
+
+Then run one of: npm run encrypt, npm run decrypt, npm run env:hash, npm run env:dehash
+`,
+);
+
 program
   .command("encrypt")
   .description("Encrypt a file")
