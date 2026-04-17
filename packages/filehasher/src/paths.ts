@@ -15,8 +15,3 @@ export function defaultDecryptOutput(encryptedPath: string): string {
   }
   return path.join(dir, base + ".decrypted");
 }
-
-/** Project root for storing .filehasher (same base as relative path resolution). */
-export function projectRootPath(): string {
-  return resolveUserPath(".");
-}

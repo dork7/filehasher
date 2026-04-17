@@ -1,52 +1,5 @@
-import fs from "node:fs";
-import path from "node:path";
 import readline from "node:readline/promises";
 import { stdin as input, stdout as output } from "node:process";
-import {
-  decryptPasswordFromStorage,
-  encryptPasswordForStorage,
-  isEncryptedPasswordStore,
-} from "./password-store.js";
-import { projectRootPath } from "./paths.js";
-
-const STORED_REL = path.join(".filehasher", "password");
-
-export function storedPasswordPath(): string {
-  return path.join(projectRootPath(), STORED_REL);
-}
-
-export function readStoredPassword(): string | null {
-  const p = storedPasswordPath();
-  if (!fs.existsSync(p)) return null;
-  try {
-    const buf = fs.readFileSync(p);
-    if (isEncryptedPasswordStore(buf)) {
-      try {
-        const plain = decryptPasswordFromStorage(buf);
-        return plain.length > 0 ? plain : null;
-      } catch {
-        return null;
-      }
-    }
-    const raw = buf.toString("utf8").trim();
-    return raw.length > 0 ? raw : null;
-  } catch {
-    return null;
-  }
-}
-
-export function saveStoredPassword(pw: string): void {
-  const dir = path.dirname(storedPasswordPath());
-  fs.mkdirSync(dir, { recursive: true });
-  const p = storedPasswordPath();
-  const blob = encryptPasswordForStorage(pw);
-  fs.writeFileSync(p, blob, { mode: 0o600 });
-  try {
-    fs.chmodSync(p, 0o600);
-  } catch {
-    /* ignore (e.g. Windows) */
-  }
-}
 
 /** Read one line with echo off when stdin is a TTY; otherwise plain readline. */
 export async function readPasswordMaskedLine(prompt: string): Promise<string> {
@@ -111,13 +64,10 @@ export async function readPasswordMaskedLine(prompt: string): Promise<string> {
 
 export type ResolvePasswordOpts = {
   password?: string;
-  forcePrompt?: boolean;
 };
 
 export type ResolvePasswordOptions = {
   confirm: boolean;
-  /** When true, save to .filehasher/password after a successful interactive entry. */
-  saveIfInteractive: boolean;
 };
 
 export async function resolvePassword(
@@ -127,19 +77,12 @@ export async function resolvePassword(
   if (opts.password !== undefined && opts.password !== "") {
     return opts.password;
   }
-  if (!opts.forcePrompt) {
-    const stored = readStoredPassword();
-    if (stored) return stored;
-  }
   const pw = await readPasswordMaskedLine("Password: ");
   if (options.confirm) {
     const again = await readPasswordMaskedLine("Confirm password: ");
     if (pw !== again) {
       throw new Error("Passwords do not match.");
     }
-  }
-  if (options.saveIfInteractive) {
-    saveStoredPassword(pw);
   }
   return pw;
 }

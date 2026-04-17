@@ -15,7 +15,7 @@ npx filehasher encrypt -i plain.txt -o secret.fhc
 npx filehasher decrypt -i secret.fhc -o plain.txt
 ```
 
-Omit `-p` / `--password` to use `.filehasher/password` in the project (if present) or a masked prompt. Interactive passwords are saved there as **AES-256-GCM ciphertext** wrapped with a key derived from this machine (hostname, home dir, user). The file is not usable on another computer; use `-p` or `--force-prompt` there. Plaintext legacy files are still read once, then rewritten encrypted on next save. Gitignore `.filehasher/`. Use `--force-prompt` to ignore the stored file.
+Omit `-p` / `--password` for a masked prompt (encrypt asks for confirmation). Passwords are not saved to disk.
 
 **`.env` helpers** (same directory as the working directory):
 

@@ -38,12 +38,11 @@ program
   .argument("[file]", "File to encrypt (or use -i)")
   .option("-i, --input <path>", "Input file path")
   .option("-o, --output <path>", "Output file path (default: <input>.fhc next to input)")
-  .option("-p, --password <string>", "Password (omit to use .filehasher/password or prompt)")
-  .option("--force-prompt", "Ignore stored password; prompt (masked) instead")
+  .option("-p, --password <string>", "Password (omit to prompt)")
   .action(
     async (
       file: string | undefined,
-      opts: { input?: string; output?: string; password?: string; forcePrompt?: boolean },
+      opts: { input?: string; output?: string; password?: string },
     ) => {
       const inRel = opts.input ?? file;
       if (!inRel) {
@@ -60,10 +59,7 @@ program
       }
       let password: string;
       try {
-        password = await resolvePassword(
-          { password: opts.password, forcePrompt: opts.forcePrompt },
-          { confirm: true, saveIfInteractive: true },
-        );
+        password = await resolvePassword({ password: opts.password }, { confirm: true });
       } catch (e) {
         console.error(e instanceof Error ? e.message : e);
         process.exit(1);
@@ -85,12 +81,11 @@ program
   .argument("[file]", "Encrypted file (or use -i)")
   .option("-i, --input <path>", "Encrypted file path")
   .option("-o, --output <path>", "Output file path (default: strip .fhc or add .decrypted)")
-  .option("-p, --password <string>", "Password (omit to use .filehasher/password or prompt)")
-  .option("--force-prompt", "Ignore stored password; prompt (masked) instead")
+  .option("-p, --password <string>", "Password (omit to prompt)")
   .action(
     async (
       file: string | undefined,
-      opts: { input?: string; output?: string; password?: string; forcePrompt?: boolean },
+      opts: { input?: string; output?: string; password?: string },
     ) => {
       const inRel = opts.input ?? file;
       if (!inRel) {
@@ -105,10 +100,7 @@ program
       }
       let password: string;
       try {
-        password = await resolvePassword(
-          { password: opts.password, forcePrompt: opts.forcePrompt },
-          { confirm: false, saveIfInteractive: true },
-        );
+        password = await resolvePassword({ password: opts.password }, { confirm: false });
       } catch (e) {
         console.error(e instanceof Error ? e.message : e);
         process.exit(1);
@@ -178,11 +170,10 @@ const envCmd = program
 
 envCmd
   .command("lock")
-  .description("Encrypt .env → .env.fhc (password from -p, .filehasher/password, or masked prompt)")
+  .description("Encrypt .env → .env.fhc (password from -p or masked prompt)")
   .alias("hash")
-  .option("-p, --password <string>", "Password (omit to use .filehasher/password or prompt)")
-  .option("--force-prompt", "Ignore stored password; prompt (masked) instead")
-  .action(async (opts: { password?: string; forcePrompt?: boolean }) => {
+  .option("-p, --password <string>", "Password (omit to prompt)")
+  .action(async (opts: { password?: string }) => {
     const inPath = resolveUserPath(".env");
     const outPath = path.join(path.dirname(inPath), path.basename(inPath) + ".fhc");
     if (!fs.existsSync(inPath)) {
@@ -191,10 +182,7 @@ envCmd
     }
     let password: string;
     try {
-      password = await resolvePassword(
-        { password: opts.password, forcePrompt: opts.forcePrompt },
-        { confirm: true, saveIfInteractive: true },
-      );
+      password = await resolvePassword({ password: opts.password }, { confirm: true });
     } catch (e) {
       console.error(e instanceof Error ? e.message : e);
       process.exit(1);
@@ -211,11 +199,10 @@ envCmd
 
 envCmd
   .command("unlock")
-  .description("Decrypt .env.fhc → .env (password from -p, .filehasher/password, or masked prompt)")
+  .description("Decrypt .env.fhc → .env (password from -p or masked prompt)")
   .alias("dehash")
-  .option("-p, --password <string>", "Password (omit to use .filehasher/password or prompt)")
-  .option("--force-prompt", "Ignore stored password; prompt (masked) instead")
-  .action(async (opts: { password?: string; forcePrompt?: boolean }) => {
+  .option("-p, --password <string>", "Password (omit to prompt)")
+  .action(async (opts: { password?: string }) => {
     const inPath = resolveUserPath(".env.fhc");
     const outPath = defaultDecryptOutput(inPath);
     if (!fs.existsSync(inPath)) {
@@ -224,10 +211,7 @@ envCmd
     }
     let password: string;
     try {
-      password = await resolvePassword(
-        { password: opts.password, forcePrompt: opts.forcePrompt },
-        { confirm: false, saveIfInteractive: true },
-      );
+      password = await resolvePassword({ password: opts.password }, { confirm: false });
     } catch (e) {
       console.error(e instanceof Error ? e.message : e);
       process.exit(1);
